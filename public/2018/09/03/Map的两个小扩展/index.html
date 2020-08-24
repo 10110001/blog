@@ -6,18 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2017/3 | My hexo blog</title>
+  <title>Map的两个小扩展 | My hexo blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="技术分享">
-<meta property="og:type" content="website">
-<meta property="og:title" content="My hexo blog">
-<meta property="og:url" content="http://yoursite.com/archives/2017/03/index.html">
+  <meta name="description" content="前言 在以前，实现数据映射，我们利用给对象属性赋值，就像这样：12var mapping = Object.create( null );mapping[ key ] = value;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Map的两个小扩展">
+<meta property="og:url" content="http://yoursite.com/2018/09/03/Map的两个小扩展/index.html">
 <meta property="og:site_name" content="My hexo blog">
-<meta property="og:description" content="技术分享">
+<meta property="og:description" content="前言 在以前，实现数据映射，我们利用给对象属性赋值，就像这样：12var mapping = Object.create( null );mapping[ key ] = value;">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/images/socket-900-400.jpeg">
+<meta property="og:updated_time" content="2020-08-24T07:43:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="My hexo blog">
-<meta name="twitter:description" content="技术分享">
+<meta name="twitter:title" content="Map的两个小扩展">
+<meta name="twitter:description" content="前言 在以前，实现数据映射，我们利用给对象属性赋值，就像这样：12var mapping = Object.create( null );mapping[ key ] = value;">
+<meta name="twitter:image" content="http://yoursite.com/images/socket-900-400.jpeg">
   
   
     <link rel="icon" href="/assets/img/favicon.ico">
@@ -151,103 +154,164 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Map的两个小扩展" class="article article-type-post " itemscope="" itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Map的两个小扩展
+    </h1>
+  
+
+        
+        <a href="/2018/09/03/Map的两个小扩展/" class="archive-article-date">
+  	<time datetime="2018-09-02T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-03</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/images/socket-900-400.jpeg" alt=""></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><hr>
+<p>在以前，实现数据映射，我们利用给对象属性赋值，就像这样：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mapping = <span class="built_in">Object</span>.create( <span class="literal">null</span> );</span><br><span class="line">mapping[ key ] = value;</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>ES6 的 Map/WeakMap 提供了更为便利及语义化的用法，功能更加强大，key 支持所有数据类型：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mapping = <span class="keyword">new</span> <span class="built_in">Map</span>;</span><br><span class="line">mapping.set( key, value );</span><br></pre></td></tr></table></figure>
+<p>通过继承 Map/WeakMap，很容易扩展功能，以 Map 为例，本文讲述一个带 过期控制 和 持久化 能力的 Map 扩展。<br>为表述方便，文中出现的代码均为伪代码，不可以直接运行。</p>
+<h1 id="过期控制"><a href="#过期控制" class="headerlink" title="过期控制"></a>过期控制</h1><hr>
+<p>基本思路：每个 Map 中的 key，都可以指定其生命周期，在它生命终结后被自动清除。<br>增加 set 方法的第三个参数，声明该 key 的生命周期，如果超过指定时间，再 get 时拿到的值为 undefined。<br>伪代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MapStore</span> <span class="keyword">extends</span> <span class="title">Map</span></span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>( ...args )&#123;</span><br><span class="line">    <span class="keyword">super</span>( ...args );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  get( key )&#123;</span><br><span class="line">    <span class="keyword">if</span>( hasExpired( key ) )&#123;</span><br><span class="line">      <span class="keyword">this</span>.delete( key );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.get( key );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  set( key, value, expires )&#123;</span><br><span class="line">    <span class="keyword">if</span>( <span class="keyword">typeof</span> expires === <span class="string">'number'</span> )&#123;</span><br><span class="line">      setExpires( key, expires );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.set( key, value );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面用了 setExpires、hasExpired 两个函数来做生命周期的设定和查询，除了设定和查询外，完整的功能还应该包括删除和清空，而这些方法刚好在原生 Map 中已有实现，所以过期时间的数据索性用一个 Map 来记录。</p>
+<p>在 Map 的基础上，扩展 check 方法用于检查一个 key 是否过期：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Expires</span> <span class="keyword">extends</span> <span class="title">Map</span> </span>&#123;</span><br><span class="line">  check( key )&#123;</span><br><span class="line">    <span class="keyword">const</span> now = <span class="built_in">Date</span>.now();</span><br><span class="line">    <span class="keyword">const</span> expiredTime = <span class="keyword">this</span>.get( key );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>( expiredTime )&#123;</span><br><span class="line">      <span class="keyword">return</span> expiredTime &gt; now;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  set( key, duration )&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.set( key, <span class="built_in">Date</span>.now() + duration );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>把 Expires 应用到 MapStore 上，作为它附带的一个子对象 expiresControl：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MapStore</span> <span class="keyword">extends</span> <span class="title">Map</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>( ...args )&#123;</span><br><span class="line">    <span class="keyword">super</span>( ...args );</span><br><span class="line">    <span class="keyword">this</span>.expiresControl = <span class="keyword">new</span> Expires;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  get( key )&#123;</span><br><span class="line">    <span class="keyword">if</span>( !<span class="keyword">this</span>.expiresControl.check( key ) )&#123;</span><br><span class="line">      <span class="keyword">this</span>.delete( key );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.get( key );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  set( key, value, expires )&#123;</span><br><span class="line">    <span class="keyword">if</span>( <span class="keyword">typeof</span> expires === <span class="string">'number'</span> )&#123;</span><br><span class="line">      <span class="keyword">this</span>.expiresControl.set( key, expires );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.set( key, value );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  clear()&#123;</span><br><span class="line">    <span class="keyword">this</span>.expiresControl.clear();</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.clear();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">delete</span>( key )&#123;</span><br><span class="line">    <span class="keyword">this</span>.expiresControl.delete( key );</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.delete( key );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到此为止，一个带有过期控制的 MapStore 就做完了，凡是过期的 key，在获取其 value 的时候总是拿到 undefined。</p>
+<p>对 MapStore 做进一步扩展，把内存中的数据保存到一个 json 文件中，以供应用重启的时候得到复原，下例我们来实现一个带有这样的持久化能力的 FileStore。</p>
+<h1 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h1><hr>
+<p>基本思路：FileStore 除了实现 MapStore 的所有能力外，同时需要将数据体和本地的一个 json 文件同步，应用无论如何重启，都不会受到影响。<br>FileStore 从 MapStore 继承而来，并扩展 json 文件同步的能力：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; set, get &#125; = <span class="built_in">Map</span>.prototype;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FileStore</span> <span class="keyword">extends</span> <span class="title">MapStore</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>( ...args )&#123;</span><br><span class="line">    <span class="keyword">super</span>( ...args );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">async</span> load( file )&#123;</span><br><span class="line">    <span class="keyword">this</span>.bindingFile = file;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> data = <span class="keyword">await</span> json.read( file );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">let</span> [ key, value, expires ] <span class="keyword">of</span> data )&#123;</span><br><span class="line">      set.call( <span class="keyword">this</span>, key, value );</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span>( expires )&#123;</span><br><span class="line">        set.call( <span class="keyword">this</span>.expiresControl, key, expires );</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">async</span> save()&#123;</span><br><span class="line">    <span class="keyword">const</span> content = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">let</span> [ key, value ] <span class="keyword">of</span> <span class="keyword">this</span> )&#123;</span><br><span class="line">      <span class="keyword">const</span> expires = get.call( <span class="keyword">this</span>.expiresControl, key );</span><br><span class="line">      <span class="keyword">const</span> item = [ key, value ];</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span>( expires )&#123;</span><br><span class="line">        item.push( expires );</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      content.push( item );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">await</span> json.write( <span class="keyword">this</span>.bindingFile, content );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>load() 方法实现从 json 文件中加载数据，并还原到当前实例中，save() 则相反，将当前实例所携带的数据，保存到 json 文件。需要注意的是，子对象 expiresControl 的数据也需要进行同步。</p>
+<p>为了更加自动，可以把 save() 方法应用到对实例数据产生修改的所有方法当中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FileStore</span> <span class="keyword">extends</span> <span class="title">MapStore</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  <span class="keyword">async</span> set( ...args )&#123;</span><br><span class="line">    <span class="keyword">const</span> result = <span class="keyword">super</span>.set( ...args );</span><br><span class="line">    <span class="keyword">await</span> <span class="keyword">this</span>.save();</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">async</span> clear( ...args )&#123;</span><br><span class="line">    <span class="keyword">const</span> result = <span class="keyword">super</span>.clear( ...args );</span><br><span class="line">    <span class="keyword">await</span> <span class="keyword">this</span>.save();</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">async</span> <span class="keyword">delete</span>( ...args )&#123;</span><br><span class="line">    <span class="keyword">const</span> result = <span class="keyword">super</span>.delete( ...args );</span><br><span class="line">    <span class="keyword">await</span> <span class="keyword">this</span>.save();</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样一来，写数据会同时写到内存和文件中，取数据则只从内存里取。</p>
+<h1 id="捆绑销售"><a href="#捆绑销售" class="headerlink" title="捆绑销售"></a>捆绑销售</h1><hr>
+<p>为了方便使用，我把 MapStore 和 FileStore 打包在一起，用一个函数统一出口，包装了一个叫<br>MapCache 的 <a href="https://www.npmjs.com/~aliwa" target="_blank" rel="noopener">npm 模块</a>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> GlobalStore = <span class="keyword">new</span> <span class="built_in">Map</span>;</span><br><span class="line"></span><br><span class="line">exports.store = <span class="keyword">async</span> ( name, fileName ) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span>( GlobalStore.has( name ) )&#123;</span><br><span class="line">    <span class="keyword">return</span> GlobalStore.get( name );</span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> store;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>( fileName )&#123;</span><br><span class="line">      store = <span class="keyword">new</span> FileStore;</span><br><span class="line">      <span class="keyword">await</span> store.load( fileName );</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      store = <span class="keyword">new</span> MapStore;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    GlobalStore.set( name, store );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> store;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>store 函数以是否提供 fileName 参数来决定使用 MapStore 或者 FileStore，返回一个经过包装的 Map 对象，既可以像原生 Map 一样使用，又支持过期控制和持久化，用法详见 <a href="https://www.npmjs.com/package/@aliwa/mapcache" target="_blank" rel="noopener">这里</a>。</p>
+<h1 id="有什么用？"><a href="#有什么用？" class="headerlink" title="有什么用？"></a>有什么用？</h1><hr>
+<p>该模块适合做一些小型的、临时性的用户交互行为信息存贮，举两个小例子：<br>  1.登录验证码：服务端生成一个随机数，与即将登录的帐号映射，过期时间 n 分钟，随机数以图片形式发给浏览端，要求用户输入，以在后端做校验。<br>  2.查看数的计算：用户在 n 分钟之间重复查看一篇文章，该文章的查看数只增加 1。可以利用该模块将文章 id 与查看用户做限时映射，如果已存在该用户，则查看数不增加。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/03/28/2016年拓尔思杭州年会/" class="archive-article-date">
-  	<time datetime="2017-03-28T04:52:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-28</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/03/28/2016年拓尔思杭州年会/">2016年拓尔思杭州年会</a>
-    </h1>
-  
+      
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/09/03/Map的两个小扩展/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/03/28/2016年拓尔思年会/" class="archive-article-date">
-  	<time datetime="2017-03-28T02:53:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-28</time>
-</a>
-        </div>
-    	 
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/03/28/2016年拓尔思年会/">2016年拓尔思——浙江日报媒立方</a>
-    </h1>
+  
+    <a href="/2018/03/02/2018阿里云部门年会/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">2018阿里云部门年会</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+  
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Map的两个小扩展" data-title="Map的两个小扩展" data-url="http://yoursite.com/2018/09/03/Map的两个小扩展/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"litten-hexo"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
   
 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/03/23/我的第一个hexo博客/" class="archive-article-date">
-  	<time datetime="2017-03-23T08:42:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/03/23/我的第一个hexo博客/">我的第一个hexo博客</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -270,8 +334,8 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: true,
