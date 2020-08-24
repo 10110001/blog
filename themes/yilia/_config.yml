@@ -2,13 +2,13 @@
 
 menu:
   主页: /
-  相册: /photos
+  相册: /
 
 # SubNav
 subnav:
   github: "https://github.com/10110001" 
   weibo: "https://www.cnblogs.com/aliwa/"
-  rss: /atom.xml
+  #rss: /atom.xml
   #zhihu: "#"
   #douban: "#"
   #segmentfault: "#"
@@ -18,7 +18,7 @@ subnav:
   #twitter: "#"
   #linkedin: "#"
 
-rss: /atom.xml
+#rss: /atom.xml
 
 # 是否需要修改 root 路径
 # 如果您的网站存放在子目录中，例如 http://yoursite.com/blog，
