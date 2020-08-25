@@ -6,18 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018 | My hexo blog</title>
+  <title>Map与Object的比较 | My hexo blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="技术分享">
-<meta property="og:type" content="website">
-<meta property="og:title" content="My hexo blog">
-<meta property="og:url" content="http://yoursite.com/archives/2018/index.html">
+  <meta name="description" content="前言 Maps是es6里面新增的对象类型，创建形式如下：12// Creating new maplet myMap = new Map()">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Map与Object的比较">
+<meta property="og:url" content="http://yoursite.com/2018/03/20/Map与Object的比较/index.html">
 <meta property="og:site_name" content="My hexo blog">
-<meta property="og:description" content="技术分享">
+<meta property="og:description" content="前言 Maps是es6里面新增的对象类型，创建形式如下：12// Creating new maplet myMap = new Map()">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/images/socket-800-400.png">
+<meta property="og:updated_time" content="2020-08-25T00:30:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="My hexo blog">
-<meta name="twitter:description" content="技术分享">
+<meta name="twitter:title" content="Map与Object的比较">
+<meta name="twitter:description" content="前言 Maps是es6里面新增的对象类型，创建形式如下：12// Creating new maplet myMap = new Map()">
+<meta name="twitter:image" content="http://yoursite.com/images/socket-800-400.png">
   
   
     <link rel="icon" href="/assets/img/favicon.ico">
@@ -151,103 +154,199 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Map与Object的比较" class="article article-type-post " itemscope="" itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/09/03/Map的两个小扩展/" class="archive-article-date">
-  	<time datetime="2018-09-02T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-03</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/09/03/Map的两个小扩展/">Map的两个小扩展</a>
+    <h1 class="article-title" itemprop="name">
+      Map与Object的比较
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/20/Map与Object的比较/" class="archive-article-date">
+        
+        <a href="/2018/03/20/Map与Object的比较/" class="archive-article-date">
   	<time datetime="2018-03-19T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-20</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/20/Map与Object的比较/">Map与Object的比较</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/images/socket-800-400.png" alt=""></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><hr>
+<p>Maps是es6里面新增的对象类型，创建形式如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Creating new map</span></span><br><span class="line"><span class="keyword">let</span> myMap = <span class="keyword">new</span> <span class="built_in">Map</span>()</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>传递数组参数：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> myMap = <span class="keyword">new</span> <span class="built_in">Map</span>([</span><br><span class="line">  [<span class="string">'name'</span>,  <span class="string">'xiaoHong'</span>],</span><br><span class="line">  [<span class="string">'gender'</span>, <span class="string">'女'</span>],</span><br><span class="line">  [<span class="string">'age'</span>, <span class="number">23</span>]</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(myMap)</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// Map &#123; 'name' =&gt; 'xiaoHong', 'gender' =&gt; '女', 'age' =&gt; 23 &#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>对象转化参数：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> myObj = &#123;</span><br><span class="line">  subject: <span class="string">'Math'</span>,</span><br><span class="line">  level: <span class="string">'1'</span>,</span><br><span class="line">  difficulty: <span class="string">'Medium'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myMap = <span class="keyword">new</span> <span class="built_in">Map</span>(<span class="built_in">Object</span>.entries(myObj))</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(myMap)</span><br><span class="line"><span class="comment">// Outputs:</span></span><br><span class="line"><span class="comment">// Map &#123; 'subject' =&gt; 'Math', 'level' =&gt; '1', 'difficulty' =&gt; 'Medium' &#125;</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="快速了解maps"><a href="#快速了解maps" class="headerlink" title="快速了解maps"></a>快速了解maps</h1><p>我们知道Objects是用来以key-value对的形式存储数据的，Maps跟Objects很相似，当你往maps中存储数据的时候，其实也是key-value对的形式。</p>
+<p>跟objects很相似，maps可以添加和删除属性，还可以检索values值，那么它们之间到底有什么区别呢？<br>下面让我们来做个比较：</p>
+<h1 id="Maps-vs-Objects"><a href="#Maps-vs-Objects" class="headerlink" title="Maps vs Objects"></a>Maps vs Objects</h1><p>简单总结如下：</p>
+<ol>
+<li>maps的keys可以是 <code>任意数据类型</code>，甚至包括 <code>对象</code> 和 <code>函数</code>，objects的keys只能是<code>字符串</code> 或者 <a href="https://developer.mozilla.org/zh-CN/docs/Glossary/Symbol" target="_blank" rel="noopener">symbol</a>。</li>
+<li>maps支持keys的排序并且是按照<code>添加的顺序</code>进行排列的, objects从es6开始只在<code>JavaScript engines</code>中才支持排序，在es6之前是不支持的。</li>
+<li>maps的key-value对的数量获取更加容易，通过<code>size</code>属性即可，而objects要获取key-value对的数量需要先通过<code>keys()</code> 或者 <code>values()</code> 方法。</li>
+<li>maps的遍历更加方便快捷，objects需要通过先获取数组形式的keys或者values集合,maps直接调用 <code>forEach()</code>即可，就像数组一样方便，也可以像objects一样使用 <code>for...of</code> 循环。<br>forEach():<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> myMap = <span class="keyword">new</span> <span class="built_in">Map</span>()</span><br><span class="line"><span class="comment">//添加属性值</span></span><br><span class="line">myMap.set(<span class="string">'name'</span>, <span class="string">'xiaoHong'</span>)</span><br><span class="line">myMap.set(<span class="string">'gender'</span>, <span class="string">'女'</span>)</span><br><span class="line">myMap.set(<span class="string">'age'</span>, <span class="string">'23'</span>)</span><br><span class="line"></span><br><span class="line">myMap.forEach(<span class="function">(<span class="params">value, key</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;key&#125;</span>: <span class="subst">$&#123;value&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// 'name: xiaoHong'</span></span><br><span class="line"><span class="comment">// 'gender: 女'</span></span><br><span class="line"><span class="comment">// "age: 23"</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>for…of和next():<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> myMap = <span class="keyword">new</span> <span class="built_in">Map</span>()</span><br><span class="line"><span class="comment">//添加属性值</span></span><br><span class="line">myMap.set(<span class="string">'name'</span>, <span class="string">'xiaoHong'</span>)</span><br><span class="line">myMap.set(<span class="string">'gender'</span>, <span class="string">'女'</span>)</span><br><span class="line">myMap.set(<span class="string">'age'</span>, <span class="string">'23'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 也可以调用 keys() and values()</span></span><br><span class="line"><span class="keyword">const</span> entriesIterator = myMap.entries()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> item <span class="keyword">of</span> entriesIterator) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(item)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// [ 'name', 'xiaoHong' ] // [ 'gender', '女'] // [ 'age', '23' ]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> keysIterator = myMap.keys()</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(keysIterator.next().value)</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// 'name'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(keysIterator.next().value)</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// 'gender'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> valuesIterator = myMap.values()</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(valuesIterator.next().value)</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// 'xiaoHong'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(valuesIterator.next().value)</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// '女'</span></span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>maps对添加和删除key-value对的操作进行了性能上的优化，Objects则没有，所以使用maps可以帮助你提升代码的性能。</li>
+</ol>
+<h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><table>
+<thead>
+<tr>
+<th>Maps</th>
+<th>VS</th>
+<th>Objects</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>任意类型</td>
+<td>KEY类型</td>
+<td>String 或者 <a href="https://developer.mozilla.org/zh-CN/docs/Glossary/Symbol" target="_blank" rel="noopener">Symbol</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>KEY排序</td>
+<td>NO(ES5)</td>
+</tr>
+<tr>
+<td>YES</td>
+<td>属性数量</td>
+<td>NO</td>
+</tr>
+<tr>
+<td>YES</td>
+<td>遍历</td>
+<td>NO</td>
+</tr>
+<tr>
+<td>YES</td>
+<td>Add和Delete性能优化</td>
+<td>NO</td>
+</tr>
+</tbody>
+</table>
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/03/20/Map与Object的比较/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/02/2018阿里云部门年会/" class="archive-article-date">
-  	<time datetime="2018-03-02T05:13:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-02</time>
-</a>
-        </div>
-    	 
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/02/2018阿里云部门年会/">2018阿里云部门年会</a>
-    </h1>
+    <a href="/2018/09/03/Map的两个小扩展/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Map的两个小扩展
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/02/2018阿里云部门年会/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">2018阿里云部门年会</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+  
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Map与Object的比较" data-title="Map与Object的比较" data-url="http://yoursite.com/2018/03/20/Map与Object的比较/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"litten-hexo"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
   
 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -270,8 +369,8 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: true,
